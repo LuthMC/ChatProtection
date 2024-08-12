@@ -6,6 +6,8 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\player\Player;
+use pocketmine\scheduler\TaskScheduler;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 
 class EventListener implements Listener {
@@ -15,7 +17,7 @@ class EventListener implements Listener {
     private $commandCount = [];
     private $chatLocked = false;
 
-    public function __construct(ChatProtection $plugin) {
+    public function __construct(Main $plugin) {
         $this->plugin = $plugin;
     }
 
@@ -63,25 +65,14 @@ class EventListener implements Listener {
 
     private function resetCounter(string $name, string $type): void {
         $plugin = $this->plugin;
-        Server::getInstance()->getScheduler()->scheduleDelayedTask(new class($plugin, $name, $type) extends \pocketmine\scheduler\Task {
-            private $plugin;
-            private $name;
-            private $type;
-
-            public function __construct(ChatProtection $plugin, string $name, string $type) {
-                $this->plugin = $plugin;
-                $this->name = $name;
-                $this->type = $type;
+        $scheduler = $plugin->getScheduler();
+        $scheduler->scheduleDelayedTask(new ClosureTask(function() use ($name, $type, $plugin): void {
+            if ($type === "message") {
+                $plugin->messageCount[$name] = 0;
+            } else {
+                $plugin->commandCount[$name] = 0;
             }
-
-            public function onRun(): void {
-                if ($this->type === "message") {
-                    $this->plugin->messageCount[$this->name] = 0;
-                } else {
-                    $this->plugin->commandCount[$this->name] = 0;
-                }
-            }
-        }, 20);
+        }), 20);
     }
 
     private function notifyAdmins(string $messageKey, string $playerName): void {
