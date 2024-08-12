@@ -1,0 +1,17 @@
+# ChatProtection Configuration
+# Github: https://github.com/LuthMC/ChatProtection
+
+anti-spam:
+  enabled: true
+  max_messages_per_second: 3
+  kick_on_spam: true
+  kick_message: "You have been kicked for spamming."
+
+anti-command-spam:
+  enabled: true
+  max_commands_per_second: 2
+  kick_on_spam: true
+  kick_message: "You have been kicked for command spamming."
+
+chat:
+  lock_on_join: false
