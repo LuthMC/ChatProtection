@@ -1,0 +1,9 @@
+messages:
+  prefix: "[ChatProtection] "
+  chat_locked: "{prefix}The chat has been locked by an administrator."
+  chat_unlocked: "{prefix}The chat has been unlocked by an administrator."
+  chat_cleared: "{prefix}The chat has been cleared by an administrator."
+  spam_warning: "{prefix}Please slow down! You are sending messages too quickly."
+  command_spam_warning: "{prefix}Please slow down! You are using commands too quickly."
+  admin_notify_spam: "{prefix}[{player}] is spamming the chat!"
+  admin_notify_command_spam: "{prefix}[{player}] is spamming commands!"
