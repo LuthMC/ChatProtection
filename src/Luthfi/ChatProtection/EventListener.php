@@ -46,7 +46,10 @@ class EventListener implements Listener {
     }
 
     public function onPlayerCommand(CommandEvent $event): void {
-        $player = $event->getPlayer();
+        $sender = $event->getSender();
+
+    if ($sender instanceof Player) {
+        $player = $sender;
 
         if ($this->plugin->getConfig()->get("anti-command-spam")['enabled']) {
             $name = $player->getName();
@@ -62,6 +65,7 @@ class EventListener implements Listener {
             $this->resetCounter($name, "command");
         }
     }
+}
 
     private function resetCounter(string $name, string $type): void {
         $plugin = $this->plugin;
