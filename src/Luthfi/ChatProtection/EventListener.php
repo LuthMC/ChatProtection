@@ -4,7 +4,7 @@ namespace Luthfi\ChatProtection;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\CommandEvent;
+use pocketmine\event\server\CommandEvent;
 use pocketmine\player\Player;
 use pocketmine\scheduler\TaskScheduler;
 use pocketmine\scheduler\ClosureTask;
