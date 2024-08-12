@@ -1,8 +1,10 @@
-name: ChatProtection+
-main: Luthfi\ChatProtectionPlus\ChatProtectionPlus
+name: ChatProtection
+main: Luthfi\ChatProtection\Main
 version: 0.0.1
 api: 5.0.0
 author: Luthfi
+description: A plugin to protect your chat from spam and other unwanted behavior.
+website: https://github.com/LuthMC/ChatProtection
 commands:
   lockchat:
     description: Locks the chat.
