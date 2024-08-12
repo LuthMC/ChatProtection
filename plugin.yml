@@ -1,0 +1,31 @@
+name: ChatProtection+
+main: Luthfi\ChatProtectionPlus\ChatProtectionPlus
+version: 0.0.1
+api: 5.0.0
+author: Luthfi
+commands:
+  lockchat:
+    description: Locks the chat.
+    usage: /lockchat
+    permission: chatprotection.lock
+  unlockchat:
+    description: Unlocks the chat.
+    usage: /unlockchat
+    permission: chatprotection.unlock
+  clearchat:
+    description: Clears the chat.
+    usage: /clearchat
+    permission: chatprotection.clear
+permissions:
+  chatprotection.lock:
+    description: Allows the player to lock the chat.
+    default: op
+  chatprotection.unlock:
+    description: Allows the player to unlock the chat.
+    default: op
+  chatprotection.clear:
+    description: Allows the player to clear the chat.
+    default: op
+  chatprotection.notify:
+    description: Allows the player to receive notifications about spamming.
+    default: op
