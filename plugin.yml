@@ -1,6 +1,6 @@
 name: ChatProtection
 main: Luthfi\ChatProtection\Main
-version: 0.0.1
+version: 0.0.2
 api: 5.0.0
 author: Luthfi
 description: A plugin to protect your chat from spam and other unwanted behavior.
