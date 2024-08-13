@@ -8,6 +8,7 @@
     • Notify Admin.                                   
     • Customizable Messages.                                   
     • Get kick if Spamming.                               
+    • Lock/Unlock Chats.                               
     • More Feature Soon!
 
 🔎 If you found any bugs feel free to open [issues](https://github.com/LuthMC/ChatProtection/issues)!
