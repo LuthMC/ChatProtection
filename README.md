@@ -1,5 +1,4 @@
 # 🔒 ChatProtection V0.0.2
-[![GitHub contributors](https://img.shields.io/github/contributors/LuthMC/ChatProtection)](https://github.com/LuthMC/ChatProtection/graphs/contributors)
 ### Feature
     • Anti-Spam.                                   
     • Anti-Command-Spam.                                   
