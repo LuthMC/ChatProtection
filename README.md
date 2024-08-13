@@ -9,6 +9,7 @@
     • Customizable Messages.                                   
     • Get kick if Spamming.                               
     • Lock/Unlock Chats.                               
+    • Clear Chats.
     • More Feature Soon!
 
 ### Commands
