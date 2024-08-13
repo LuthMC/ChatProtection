@@ -119,6 +119,7 @@ class EventListener implements Listener {
     public function unlockChat(): void {
         $this->chatLocked = false;
     }
+    
     private function getMessage(string $key, array $replacements = []): string {
         $message = $this->plugin->getConfig()->get("messages")[$key] ?? $key;
         $prefix = $this->plugin->getConfig()->get("messages")['prefix'] ?? "[ChatProtection] ";
