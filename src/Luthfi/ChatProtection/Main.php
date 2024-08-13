@@ -15,6 +15,7 @@ class Main extends PluginBase implements Listener {
         $this->config = $this->getConfig();
         $this->messages = new Config($this->getDataFolder() . "messages.yml", Config::YAML);
         $this->eventListener = new EventListener($this);
+        $this->eventListener->getMessage($key, $replacements);
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->getLogger()->info("ChatProtection Enabled");
     }
@@ -24,28 +25,28 @@ class Main extends PluginBase implements Listener {
         case "lock":
             if ($sender->hasPermission("chatprotection.lock")) {
                 $this->eventListener->lockChat();
-                $this->getServer()->broadcastMessage($this->getMessage("chat_locked_by_admin"));
+                $this->getServer()->broadcastMessage($this->eventListener->getMessage("chat_locked_by_admin"));
                 return true;
             }
-            $sender->sendMessage($this->getMessage("no_permission"));
+            $sender->sendMessage($this->eventListener->getMessage("no_permission"));
             return false;
 
         case "unlock":
             if ($sender->hasPermission("chatprotection.unlock")) {
                 $this->eventListener->unlockChat();
-                $this->getServer()->broadcastMessage($this->getMessage("chat_unlocked_by_admin"));
+                $this->getServer()->broadcastMessage($this->eventListener->getMessage("chat_unlocked_by_admin"));
                 return true;
             }
-            $sender->sendMessage($this->getMessage("no_permission"));
+            $sender->sendMessage($this->eventListener->getMessage("no_permission"));
             return false;
 
         case "clearchat":
             if ($sender->hasPermission("chatprotection.clearchat")) {
                 $this->clearChat();
-                $sender->sendMessage($this->getMessage("chat_cleared"));
+                $sender->sendMessage($this->eventListener->getMessage("chat_cleared"));
                 return true;
             }
-            $sender->sendMessage($this->getMessage("no_permission"));
+            $sender->sendMessage($this->eventListener->getMessage("no_permission"));
             return false;
         }
     return false;
