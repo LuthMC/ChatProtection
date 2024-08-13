@@ -27,6 +27,16 @@ class Main extends PluginBase implements Listener {
     private function loadMessages(): void {
         $this->messages = $this->getConfig()->get("messages");
     }
+
+    public function getMessage(string $key, array $replacements = []): string {
+        $message = $this->messages[$key] ?? $key;
+        $prefix = $this->messages['prefix'] ?? "[ChatProtection] ";
+        $message = str_replace("{prefix}", $prefix, $message);
+        foreach ($replacements as $search => $replace) {
+            $message = str_replace($search, $replace, $message);
+        }
+        return $message;
+    }
     
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
     switch ($command->getName()) {
