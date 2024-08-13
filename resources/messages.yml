@@ -1,8 +1,9 @@
 messages:
   prefix: "[ChatProtection] "
   no_permission: "{prefix}You don't have permission to use this command!"
-  chat_locked: "{prefix}The chat has been locked by an administrator."
-  chat_unlocked: "{prefix}The chat has been unlocked by an administrator."
+  chat_cleared: "{prefix}Chat has been cleared by an admin."
+  chat_locked: "{prefix}The chat has been locked by an admin."
+  chat_unlocked: "{prefix}The chat has been unlocked by an admin."
   chat_locked_by_admin: "{prefix}Chat has been locked by an admin."
   chat_unlocked_by_admin: "{prefix}Chat has been unlocked by an admin."
   lock_usage: "{prefix}Use /lock to lock the chat."
