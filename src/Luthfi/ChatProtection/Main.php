@@ -10,6 +10,9 @@ use pocketmine\utils\Config;
 
 class Main extends PluginBase implements Listener {
 
+    private $eventListener;
+    private $messages;
+    
     public function onEnable(): void {
         $this->saveDefaultConfig();
         $this->config = $this->getConfig();
@@ -17,9 +20,14 @@ class Main extends PluginBase implements Listener {
         $this->eventListener = new EventListener($this);
         $this->eventListener->getMessage($key, $replacements);
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+        $this->loadMessages();
         $this->getLogger()->info("ChatProtection Enabled");
     }
 
+    private function loadMessages(): void {
+        $this->messages = $this->getConfig()->get("messages");
+    }
+    
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
     switch ($command->getName()) {
         case "lock":
