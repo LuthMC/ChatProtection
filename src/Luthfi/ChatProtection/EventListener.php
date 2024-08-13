@@ -13,12 +13,14 @@ use pocketmine\Server;
 class EventListener implements Listener {
 
     private $plugin;
+    private $messages;
     private $messageCount = [];
     private $commandCount = [];
     private $chatLocked = false;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
+        $this->messages = $messages;
     }
 
     public function onPlayerChat(PlayerChatEvent $event): void {
@@ -120,9 +122,9 @@ class EventListener implements Listener {
         $this->chatLocked = false;
     }
     
-    private function getMessage(string $key, array $replacements = []): string {
-        $message = $this->plugin->getConfig()->get("messages")[$key] ?? $key;
-        $prefix = $this->plugin->getConfig()->get("messages")['prefix'] ?? "[ChatProtection] ";
+    public function getMessage(string $key, array $replacements = []): string {
+        $message = $this->messages[$key] ?? $key;
+        $prefix = $this->messages['prefix'] ?? "[ChatProtection] ";
         $message = str_replace("{prefix}", $prefix, $message);
         foreach ($replacements as $search => $replace) {
             $message = str_replace($search, $replace, $message);

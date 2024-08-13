@@ -1,6 +1,8 @@
 messages:
   prefix: "[ChatProtection] "
   no_permission: "{prefix}You don't have permission to use this command!"
+  kick_message: "{prefix}You have been kicked for spamming."
+  warning_message: "{prefix}Warning! You are sending messages too quickly. Please slow down to avoid being kicked."
   chat_cleared: "{prefix}Chat has been cleared by an admin."
   chat_locked: "{prefix}The chat has been locked by an admin."
   chat_unlocked: "{prefix}The chat has been unlocked by an admin."
