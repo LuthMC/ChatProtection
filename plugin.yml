@@ -17,7 +17,7 @@ commands:
   clearchat:
     description: Clears the chat.
     usage: /clearchat
-    permission: chatprotection.clear
+    permission: chatprotection.clearchat
 permissions:
   chatprotection.lock:
     description: Allows the player to lock the chat.
@@ -25,7 +25,7 @@ permissions:
   chatprotection.unlock:
     description: Allows the player to unlock the chat.
     default: op
-  chatprotection.clear:
+  chatprotection.clearchat:
     description: Allows the player to clear the chat.
     default: op
   chatprotection.notify:
