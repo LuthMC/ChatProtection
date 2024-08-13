@@ -1,8 +1,10 @@
-# 🔒 ChatProtection V0.0.1
+# 🔒 ChatProtection V0.0.2
 
 ### Feature
     • Anti-Spam.                                   
     • Anti-Command-Spam.                                   
+    • Anti-Caps.                               
+    • Anti-Advertise.                              
     • Notify Admin.                                   
     • Customizable Messages.                                   
     • Get kick if Spamming.                               
