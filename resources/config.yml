@@ -13,5 +13,17 @@ anti-command-spam:
   kick_on_spam: true
   kick_message: "You have been kicked for command spamming."
 
-chat:
-  lock_on_join: false
+anti-caps:
+  enabled: true
+  min_length: 5
+  caps_threshold: 70
+  warning_message: "{prefix}Please do not use too many caps."
+
+anti-advertise:
+  enabled: true
+  blocked_domains:
+    - "example.com"
+    - "anotherexample.com"
+  warning_message: "{prefix}Advertising is not allowed on this server."
+  kick_on_advertise: true
+  kick_message: "You have been kicked for advertising."

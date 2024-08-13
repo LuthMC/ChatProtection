@@ -5,4 +5,5 @@ branches:
 projects:
   ChatProtection:
     path: ""
+    icon: icon.png
 ...

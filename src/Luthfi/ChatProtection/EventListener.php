@@ -43,7 +43,31 @@ class EventListener implements Listener {
             }
             $this->resetCounter($name, "message");
         }
-    }
+
+        if ($this->plugin->getConfig()->get("anti-caps")['enabled']) {
+        $capsMessage = preg_replace('/[^A-Z]/', '', $message);
+        $capsRatio = strlen($capsMessage) / strlen($message) * 100;
+        if (strlen($message) >= $this->plugin->getConfig()->get("anti-caps")['min_length'] &&
+            $capsRatio > $this->plugin->getConfig()->get("anti-caps")['caps_threshold']) {
+            $event->cancel();
+            $player->sendMessage($this->getMessage("anti-caps")['warning_message']);
+          }
+      }
+
+        if ($this->plugin->getConfig()->get("anti-advertise")['enabled']) {
+        foreach ($this->plugin->getConfig()->get("anti-advertise")['blocked_domains'] as $domain) {
+            if (stripos($message, $domain) !== false) {
+                $event->cancel();
+                $player->sendMessage($this->getMessage("anti-advertise")['warning_message']);
+                $this->notifyAdmins("admin_notify_advertise", $player->getName());
+                if ($this->plugin->getConfig()->get("anti-advertise")['kick_on_advertise']) {
+                    $player->kick($this->getMessage("anti-advertise")['kick_message']);
+                }
+                return;
+             }
+         }
+     }
+ }
 
     public function onPlayerCommand(CommandEvent $event): void {
         $sender = $event->getSender();
@@ -88,6 +112,14 @@ class EventListener implements Listener {
         }
     }
 
+    public function lockChat(): void {
+        $this->chatLocked = true;
+    }
+
+    public function unlockChat(): void {
+        $this->chatLocked = false;
+    }
+    
     private function getMessage(string $key, array $replacements = []): string {
         $message = $this->plugin->getConfig()->get("messages")[$key] ?? $key;
         $prefix = $this->plugin->getConfig()->get("messages")['prefix'] ?? "[ChatProtection] ";
