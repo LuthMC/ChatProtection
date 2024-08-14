@@ -13,14 +13,14 @@ use pocketmine\Server;
 class EventListener implements Listener {
 
     private $plugin;
-    private $messages;
+    private $message;
     private $messageCount = [];
     private $commandCount = [];
     private $chatLocked = false;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
-        $this->messages = $messages;
+        $this->message = $message;
     }
 
     public function onPlayerChat(PlayerChatEvent $event): void {
