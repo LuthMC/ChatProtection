@@ -15,10 +15,8 @@ class Main extends PluginBase implements Listener {
     
     public function onEnable(): void {
         $this->saveDefaultConfig();
-        $this->config = $this->getConfig();
         $this->messages = new Config($this->getDataFolder() . "messages.yml", Config::YAML);
         $this->eventListener = new EventListener($this);
-        $this->eventListener->getMessage($key, $replacements);
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->loadMessages();
         $this->getLogger()->info("ChatProtection Enabled");
@@ -28,15 +26,15 @@ class Main extends PluginBase implements Listener {
         $this->messages = $this->getConfig()->get("messages");
     }
 
-    public function getMessage(string $key, array $replacements = []): string {
-        $message = $this->messages[$key] ?? $key;
-        $prefix = $this->messages['prefix'] ?? "[ChatProtection] ";
-        $message = str_replace("{prefix}", $prefix, $message);
-        foreach ($replacements as $search => $replace) {
-            $message = str_replace($search, $replace, $message);
-        }
-        return $message;
+    private function getMessage(string $key, array $replacements = []): string {
+    $message = $this->messages[$key] ?? $key;
+    $prefix = $this->messages['prefix'] ?? "[ChatProtection] ";
+    $message = str_replace("{prefix}", $prefix, $message);
+    foreach ($replacements as $search => $replace) {
+        $message = str_replace($search, $replace, $message);
     }
+    return $message;
+ }
     
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
     switch ($command->getName()) {
