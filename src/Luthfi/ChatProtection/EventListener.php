@@ -6,15 +6,16 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\server\CommandEvent;
 use pocketmine\player\Player;
+use pocketmine\scheduler\TaskScheduler;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 
 class EventListener implements Listener {
 
-    private Main $plugin;
-    private array $messageCount = [];
-    private array $commandCount = [];
-    private bool $chatLocked = false;
+    private $plugin;
+    private $messageCount = [];
+    private $commandCount = [];
+    private $chatLocked = false;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
@@ -50,7 +51,7 @@ class EventListener implements Listener {
             if (strlen($message) >= $this->plugin->getConfig()->get("anti-caps")['min_length'] &&
                 $capsRatio > $this->plugin->getConfig()->get("anti-caps")['caps_threshold']) {
                 $event->cancel();
-                $player->sendMessage($this->plugin->getMessage("anti-caps_warning"));
+                $player->sendMessage($this->plugin->getMessage("anti-caps")['warning_message']);
             }
         }
 
@@ -97,11 +98,12 @@ class EventListener implements Listener {
     }
 
     private function resetCounter(string $name, string $type): void {
-        $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use ($name, $type): void {
+        $scheduler = $this->plugin->getScheduler();
+        $scheduler->scheduleDelayedTask(new ClosureTask(function() use ($name, $type): void {
             if ($type === "message") {
-                $this->messageCount[$name] = 0;
+                $this->plugin->messageCount[$name] = 0;
             } else {
-                $this->commandCount[$name] = 0;
+                $this->plugin->commandCount[$name] = 0;
             }
         }), 20);
     }
@@ -124,6 +126,7 @@ class EventListener implements Listener {
     }
     
     public function getMessage(string $key, array $replacements = []): string {
-        return $this->plugin->getMessage($key, $replacements);
+        $message = $this->plugin->getMessage($key, $replacements);
+        return $message;
     }
 }
