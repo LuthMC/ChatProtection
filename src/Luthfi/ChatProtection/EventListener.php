@@ -57,19 +57,24 @@ class EventListener implements Listener {
       }
 
         if ($this->plugin->getConfig()->get("anti-advertise")['enabled']) {
-        foreach ($this->plugin->getConfig()->get("anti-advertise")['blocked_domains'] as $domain) {
-            if (stripos($message, $domain) !== false) {
-                $event->cancel();
-                $player->sendMessage($this->getMessage("anti-advertise")['warning_message']);
-                $this->notifyAdmins("admin_notify_advertise", $player->getName());
-                if ($this->plugin->getConfig()->get("anti-advertise")['kick_on_advertise']) {
-                    $player->kick($this->getMessage("anti-advertise")['kick_message']);
-                }
-                return;
-             }
-         }
-     }
- }
+            foreach ($this->plugin->getConfig()->get("anti-advertise")['blocked_domains'] as $domain) {
+                if (stripos($message, $domain) !== false) {
+                    $event->cancel();
+
+                    $warningMessage = $this->plugin->getConfig()->get("anti-advertise")['warning_message'];
+                    $kickMessage = $this->plugin->getConfig()->get("anti-advertise")['kick_message'];
+
+                    $player->sendMessage($this->getMessage($warningMessage));
+                    $this->notifyAdmins("admin_notify_advertise", $player->getName());
+
+                    if ($this->plugin->getConfig()->get("anti-advertise")['kick_on_advertise']) {
+                        $player->kick($this->getMessage($kickMessage));
+                    }
+                    return;
+                 }
+              }
+           }
+        }
 
     public function onPlayerCommand(CommandEvent $event): void {
         $sender = $event->getSender();
