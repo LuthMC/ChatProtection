@@ -13,22 +13,21 @@ use pocketmine\Server;
 class EventListener implements Listener {
 
     private $plugin;
-    private $message;
     private $messageCount = [];
     private $commandCount = [];
     private $chatLocked = false;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
-        $this->message = $message;
     }
 
     public function onPlayerChat(PlayerChatEvent $event): void {
         $player = $event->getPlayer();
+        $message = $event->getMessage();
 
         if ($this->chatLocked) {
             $event->cancel();
-            $player->sendMessage($this->getMessage("chat_locked"));
+            $player->sendMessage($this->plugin->getMessage("chat_locked"));
             return;
         }
 
@@ -37,7 +36,7 @@ class EventListener implements Listener {
             $this->messageCount[$name] = ($this->messageCount[$name] ?? 0) + 1;
             if ($this->messageCount[$name] > $this->plugin->getConfig()->get("anti-spam")['max_messages_per_second']) {
                 $event->cancel();
-                $player->sendMessage($this->getMessage("spam_warning"));
+                $player->sendMessage($this->plugin->getMessage("spam_warning"));
                 $this->notifyAdmins("admin_notify_spam", $player->getName());
                 if ($this->plugin->getConfig()->get("anti-spam")['kick_on_spam']) {
                     $player->kick($this->plugin->getConfig()->get("anti-spam")['kick_message']);
@@ -47,14 +46,14 @@ class EventListener implements Listener {
         }
 
         if ($this->plugin->getConfig()->get("anti-caps")['enabled']) {
-        $capsMessage = preg_replace('/[^A-Z]/', '', $message);
-        $capsRatio = strlen($capsMessage) / strlen($message) * 100;
-        if (strlen($message) >= $this->plugin->getConfig()->get("anti-caps")['min_length'] &&
-            $capsRatio > $this->plugin->getConfig()->get("anti-caps")['caps_threshold']) {
-            $event->cancel();
-            $player->sendMessage($this->getMessage("anti-caps")['warning_message']);
-          }
-      }
+            $capsMessage = preg_replace('/[^A-Z]/', '', $message);
+            $capsRatio = strlen($capsMessage) / strlen($message) * 100;
+            if (strlen($message) >= $this->plugin->getConfig()->get("anti-caps")['min_length'] &&
+                $capsRatio > $this->plugin->getConfig()->get("anti-caps")['caps_threshold']) {
+                $event->cancel();
+                $player->sendMessage($this->plugin->getMessage("anti-caps")['warning_message']);
+            }
+        }
 
         if ($this->plugin->getConfig()->get("anti-advertise")['enabled']) {
             foreach ($this->plugin->getConfig()->get("anti-advertise")['blocked_domains'] as $domain) {
@@ -64,54 +63,53 @@ class EventListener implements Listener {
                     $warningMessage = $this->plugin->getConfig()->get("anti-advertise")['warning_message'];
                     $kickMessage = $this->plugin->getConfig()->get("anti-advertise")['kick_message'];
 
-                    $player->sendMessage($this->getMessage($warningMessage));
+                    $player->sendMessage($this->plugin->getMessage($warningMessage));
                     $this->notifyAdmins("admin_notify_advertise", $player->getName());
 
                     if ($this->plugin->getConfig()->get("anti-advertise")['kick_on_advertise']) {
-                        $player->kick($this->getMessage($kickMessage));
+                        $player->kick($this->plugin->getMessage($kickMessage));
                     }
                     return;
-                 }
-              }
-           }
+                }
+            }
         }
+    }
 
     public function onPlayerCommand(CommandEvent $event): void {
         $sender = $event->getSender();
 
-    if ($sender instanceof Player) {
-        $player = $sender;
+        if ($sender instanceof Player) {
+            $player = $sender;
 
-        if ($this->plugin->getConfig()->get("anti-command-spam")['enabled']) {
-            $name = $player->getName();
-            $this->commandCount[$name] = ($this->commandCount[$name] ?? 0) + 1;
-            if ($this->commandCount[$name] > $this->plugin->getConfig()->get("anti-command-spam")['max_commands_per_second']) {
-                $event->cancel();
-                $player->sendMessage($this->getMessage("command_spam_warning"));
-                $this->notifyAdmins("admin_notify_command_spam", $player->getName());
-                if ($this->plugin->getConfig()->get("anti-command-spam")['kick_on_spam']) {
-                    $player->kick($this->plugin->getConfig()->get("anti-command-spam")['kick_message']);
+            if ($this->plugin->getConfig()->get("anti-command-spam")['enabled']) {
+                $name = $player->getName();
+                $this->commandCount[$name] = ($this->commandCount[$name] ?? 0) + 1;
+                if ($this->commandCount[$name] > $this->plugin->getConfig()->get("anti-command-spam")['max_commands_per_second']) {
+                    $event->cancel();
+                    $player->sendMessage($this->plugin->getMessage("command_spam_warning"));
+                    $this->notifyAdmins("admin_notify_command_spam", $player->getName());
+                    if ($this->plugin->getConfig()->get("anti-command-spam")['kick_on_spam']) {
+                        $player->kick($this->plugin->getConfig()->get("anti-command-spam")['kick_message']);
+                    }
                 }
+                $this->resetCounter($name, "command");
             }
-            $this->resetCounter($name, "command");
         }
     }
-}
 
     private function resetCounter(string $name, string $type): void {
-        $plugin = $this->plugin;
-        $scheduler = $plugin->getScheduler();
-        $scheduler->scheduleDelayedTask(new ClosureTask(function() use ($name, $type, $plugin): void {
+        $scheduler = $this->plugin->getScheduler();
+        $scheduler->scheduleDelayedTask(new ClosureTask(function() use ($name, $type): void {
             if ($type === "message") {
-                $plugin->messageCount[$name] = 0;
+                $this->plugin->messageCount[$name] = 0;
             } else {
-                $plugin->commandCount[$name] = 0;
+                $this->plugin->commandCount[$name] = 0;
             }
         }), 20);
     }
 
     private function notifyAdmins(string $messageKey, string $playerName): void {
-        $message = $this->getMessage($messageKey, ["{player}" => $playerName]);
+        $message = $this->plugin->getMessage($messageKey, ["{player}" => $playerName]);
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
             if ($player->hasPermission("chatprotection.notify")) {
                 $player->sendMessage($message);
@@ -128,12 +126,7 @@ class EventListener implements Listener {
     }
     
     public function getMessage(string $key, array $replacements = []): string {
-        $message = $this->messages[$key] ?? $key;
-        $prefix = $this->messages['prefix'] ?? "[ChatProtection] ";
-        $message = str_replace("{prefix}", $prefix, $message);
-        foreach ($replacements as $search => $replace) {
-            $message = str_replace($search, $replace, $message);
-        }
+        $message = $this->plugin->getMessage($key, $replacements);
         return $message;
     }
 }
