@@ -27,6 +27,7 @@ class Main extends PluginBase implements Listener {
     }
 
     private function getMessage(string $key, array $replacements = []): string {
+    $messages = $this->messages->get("messages");
     $message = $this->messages[$key] ?? $key;
     $prefix = $this->messages['prefix'] ?? "[ChatProtection] ";
     $message = str_replace("{prefix}", $prefix, $message);
