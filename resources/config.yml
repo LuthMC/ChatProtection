@@ -1,6 +1,8 @@
 # ChatProtection Configuration
 # Github: https://github.com/LuthMC/ChatProtection
 
+config_version: "1.0.0" # Don't change this!
+
 anti-spam:
   enabled: true
   max_messages_per_second: 3
@@ -27,3 +29,11 @@ anti-advertise:
   warning_message: "{prefix}Advertising is not allowed on this server."
   kick_on_advertise: true
   kick_message: "You have been kicked for advertising."
+
+anti-message-repeat:
+  enabled: true
+  cooldown: 10 # In seconds
+  warning_message: "{prefix}Please do not repeat the same messages."
+  kick_on_repeat: true
+  kick_message: "You have been kicked for repeating the same messages."
+  

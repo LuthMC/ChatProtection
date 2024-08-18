@@ -12,9 +12,19 @@ class Main extends PluginBase implements Listener {
 
     private $eventListener;
     private $messages;
-    
+    private $configVersion = "1.0.0";
+    private $staffChat = [];
+
     public function onEnable(): void {
         $this->saveDefaultConfig();
+        $config = $this->getConfig();
+        $configVersion = $config->get("config_version", "1.0.0");
+
+        if (version_compare($configVersion, $this->configVersion, '<')) {
+            $this->getLogger()->warning("Your config.yml is outdated. Please update it to the latest version.");
+            $this->getLogger()->warning("Current config version: " . $this->configVersion);
+        }
+        
         $this->messages = new Config($this->getDataFolder() . "messages.yml", Config::YAML);
         $this->eventListener = new EventListener($this);
         $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
@@ -23,7 +33,7 @@ class Main extends PluginBase implements Listener {
     }
 
     private function loadMessages(): void {
-        $this->messages = $this->messages->getAll();
+        $this->messages = $this->messages->getAll()['messages'] ?? [];
     }
 
     private function getMessage(string $key, array $replacements = []): string {
@@ -64,6 +74,20 @@ class Main extends PluginBase implements Listener {
                 }
                 $sender->sendMessage($this->getMessage("no_permission"));
                 return false;
+
+            case "staffchat":
+                if ($sender->hasPermission("chatprotection.staff") || $sender->isOp()) {
+                    if (isset($args[0]) && strtolower($args[0]) === "toggle") {
+                        $this->toggleStaffChat($sender);
+                        $sender->sendMessage($this->getMessage("staffchat_toggled", ["{status}" => $this->isStaffChatEnabled($sender) ? "enabled" : "disabled"]));
+                        return true;
+                    }
+                    $message = implode(" ", $args);
+                    $this->sendStaffChatMessage($sender, $message);
+                    return true;
+                }
+                $sender->sendMessage($this->getMessage("no_permission"));
+                return false;
         }
         return false;
     }
@@ -72,6 +96,26 @@ class Main extends PluginBase implements Listener {
         $clearMessage = str_repeat("\n", 100);
         foreach ($this->getServer()->getOnlinePlayers() as $player) {
             $player->sendMessage($clearMessage);
+        }
+    }
+
+    private function toggleStaffChat(CommandSender $sender): void {
+        if (!isset($this->staffChat[$sender->getName()])) {
+            $this->staffChat[$sender->getName()] = false;
+        }
+        $this->staffChat[$sender->getName()] = !$this->staffChat[$sender->getName()];
+    }
+
+    private function isStaffChatEnabled(CommandSender $sender): bool {
+        return isset($this->staffChat[$sender->getName()]) && $this->staffChat[$sender->getName()];
+    }
+
+    private function sendStaffChatMessage(CommandSender $sender, string $message): void {
+        $formattedMessage = $this->getMessage("staffchat_message", ["{player}" => $sender->getName(), "{message}" => $message]);
+        foreach ($this->getServer()->getOnlinePlayers() as $player) {
+            if ($player->hasPermission("chatprotection.staff") || $player->isOp()) {
+                $player->sendMessage($formattedMessage);
+            }
         }
     }
 

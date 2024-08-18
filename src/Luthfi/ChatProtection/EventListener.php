@@ -15,6 +15,7 @@ class EventListener implements Listener {
     private $plugin;
     private $messageCount = [];
     private $commandCount = [];
+    private $lastMessages = [];
     private $chatLocked = false;
 
     public function __construct(Main $plugin) {
@@ -31,6 +32,41 @@ class EventListener implements Listener {
             return;
         }
 
+        if ($this->plugin->getConfig()->get("anti-swear")['enabled']) {
+            $swearWords = $this->plugin->getConfig()->get("anti-swear")['swear_words'];
+            $normalizedMessage = $this->normalizeMessage($message);
+
+            foreach ($swearWords as $swearWord) {
+                $normalizedSwearWord = $this->normalizeMessage($swearWord);
+
+                if (stripos($normalizedMessage, $normalizedSwearWord) !== false) {
+                    $event->cancel();
+                    $player->sendMessage($this->plugin->getMessage("anti-swear")['warning_message']);
+                    $this->notifyAdmins("admin_notify_swear", $player->getName());
+                    if ($this->plugin->getConfig()->get("anti-swear")['kick_on_swear']) {
+                        $player->kick($this->plugin->getMessage("anti-swear")['kick_message']);
+                    }
+                    return;
+                }
+            }
+        }
+
+        if ($this->plugin->getConfig()->get("anti-message-repeat")['enabled']) {
+            $cooldown = $this->plugin->getConfig()->get("anti-message-repeat")['cooldown'];
+            $lastMessageTime = $this->lastMessages[$name] ?? 0;
+
+            if (time() - $lastMessageTime < $cooldown && $this->lastMessages[$name]['message'] === $message) {
+                $event->cancel();
+                $player->sendMessage($this->plugin->getMessage("anti-message-repeat")['warning_message']);
+                $this->notifyAdmins("admin_notify_message_repeat", $player->getName());
+                if ($this->plugin->getConfig()->get("anti-message-repeat")['kick_on_repeat']) {
+                    $player->kick($this->plugin->getConfig()->get("anti-message-repeat")['kick_message']);
+                }
+                return;
+            }
+            $this->lastMessages[$name] = ['message' => $message, 'time' => time()];
+        }
+       
         if ($this->plugin->getConfig()->get("anti-spam")['enabled']) {
             $name = $player->getName();
             $this->messageCount[$name] = ($this->messageCount[$name] ?? 0) + 1;
