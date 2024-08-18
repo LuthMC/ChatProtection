@@ -1,6 +1,8 @@
 # ChatProtection Configuration
 # Github: https://github.com/LuthMC/ChatProtection
 
+config_version: "1.0.0" # Don't change this!
+
 anti-spam:
   enabled: true
   max_messages_per_second: 3
