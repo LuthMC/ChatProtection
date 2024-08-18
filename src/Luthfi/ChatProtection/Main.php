@@ -12,9 +12,18 @@ class Main extends PluginBase implements Listener {
 
     private $eventListener;
     private $messages;
-    
+    private $configVersion = "1.0.0";
+
     public function onEnable(): void {
         $this->saveDefaultConfig();
+        $config = $this->getConfig();
+        $configVersion = $config->get("config_version", "1.0.0");
+
+        if (version_compare($configVersion, $this->configVersion, '<')) {
+            $this->getLogger()->warning("Your config.yml is outdated. Please update it to the latest version.");
+            $this->getLogger()->warning("Current config version: " . $this->configVersion);
+        }
+
         $this->messages = new Config($this->getDataFolder() . "messages.yml", Config::YAML);
         $this->eventListener = new EventListener($this);
         $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
@@ -35,7 +44,7 @@ class Main extends PluginBase implements Listener {
         }
         return $message;
     }
-    
+
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
         switch ($command->getName()) {
             case "lock":
