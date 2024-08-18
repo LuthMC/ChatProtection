@@ -76,7 +76,7 @@ class Main extends PluginBase implements Listener {
                 return false;
 
             case "staffchat":
-                if ($sender->hasPermission("chatprotection.staff") || $sender->isOp()) {
+                if ($sender->hasPermission("chatprotection.staff"){
                     if (isset($args[0]) && strtolower($args[0]) === "toggle") {
                         $this->toggleStaffChat($sender);
                         $sender->sendMessage($this->getMessage("staffchat_toggled", ["{status}" => $this->isStaffChatEnabled($sender) ? "enabled" : "disabled"]));
@@ -113,7 +113,7 @@ class Main extends PluginBase implements Listener {
     private function sendStaffChatMessage(CommandSender $sender, string $message): void {
         $formattedMessage = $this->getMessage("staffchat_message", ["{player}" => $sender->getName(), "{message}" => $message]);
         foreach ($this->getServer()->getOnlinePlayers() as $player) {
-            if ($player->hasPermission("chatprotection.staff") || $player->isOp()) {
+            if ($player->hasPermission("chatprotection.staff"){
                 $player->sendMessage($formattedMessage);
             }
         }
