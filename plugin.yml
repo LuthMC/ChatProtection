@@ -18,6 +18,10 @@ commands:
     description: Clears the chat.
     usage: /clearchat
     permission: chatprotection.clearchat
+  staffchat:
+    description: Allows access to the staff chat.
+    usage: /staffchat
+    permission: chatprotection.staff
 permissions:
   chatprotection.lock:
     description: Allows the player to lock the chat.
@@ -30,4 +34,7 @@ permissions:
     default: op
   chatprotection.notify:
     description: Allows the player to receive notifications about spamming.
+    default: op
+  chatprotection.staff:
+    description: Allows access to the staff chat.
     default: op
