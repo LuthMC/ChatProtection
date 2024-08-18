@@ -25,6 +25,7 @@ class EventListener implements Listener {
     public function onPlayerChat(PlayerChatEvent $event): void {
         $player = $event->getPlayer();
         $message = $event->getMessage();
+        $playerName = $player->getName();
 
         if ($this->chatLocked) {
             $event->cancel();
@@ -42,7 +43,7 @@ class EventListener implements Listener {
                 if (stripos($normalizedMessage, $normalizedSwearWord) !== false) {
                     $event->cancel();
                     $player->sendMessage($this->plugin->getMessage("anti-swear")['warning_message']);
-                    $this->notifyAdmins("admin_notify_swear", $player->getName());
+                    $this->notifyAdmins("admin_notify_swear", $playerName);
                     if ($this->plugin->getConfig()->get("anti-swear")['kick_on_swear']) {
                         $player->kick($this->plugin->getMessage("anti-swear")['kick_message']);
                     }
@@ -53,32 +54,31 @@ class EventListener implements Listener {
 
         if ($this->plugin->getConfig()->get("anti-message-repeat")['enabled']) {
             $cooldown = $this->plugin->getConfig()->get("anti-message-repeat")['cooldown'];
-            $lastMessageTime = $this->lastMessages[$name] ?? 0;
+            $lastMessageTime = $this->lastMessages[$playerName]['time'] ?? 0;
 
-            if (time() - $lastMessageTime < $cooldown && $this->lastMessages[$name]['message'] === $message) {
+            if (time() - $lastMessageTime < $cooldown && $this->lastMessages[$playerName]['message'] === $message) {
                 $event->cancel();
                 $player->sendMessage($this->plugin->getMessage("anti-message-repeat")['warning_message']);
-                $this->notifyAdmins("admin_notify_message_repeat", $player->getName());
+                $this->notifyAdmins("admin_notify_message_repeat", $playerName);
                 if ($this->plugin->getConfig()->get("anti-message-repeat")['kick_on_repeat']) {
-                    $player->kick($this->plugin->getConfig()->get("anti-message-repeat")['kick_message']);
+                    $player->kick($this->plugin->getMessage("anti-message-repeat")['kick_message']);
                 }
                 return;
             }
-            $this->lastMessages[$name] = ['message' => $message, 'time' => time()];
+            $this->lastMessages[$playerName] = ['message' => $message, 'time' => time()];
         }
        
         if ($this->plugin->getConfig()->get("anti-spam")['enabled']) {
-            $name = $player->getName();
-            $this->messageCount[$name] = ($this->messageCount[$name] ?? 0) + 1;
-            if ($this->messageCount[$name] > $this->plugin->getConfig()->get("anti-spam")['max_messages_per_second']) {
+            $this->messageCount[$playerName] = ($this->messageCount[$playerName] ?? 0) + 1;
+            if ($this->messageCount[$playerName] > $this->plugin->getConfig()->get("anti-spam")['max_messages_per_second']) {
                 $event->cancel();
                 $player->sendMessage($this->plugin->getMessage("spam_warning"));
-                $this->notifyAdmins("admin_notify_spam", $player->getName());
+                $this->notifyAdmins("admin_notify_spam", $playerName);
                 if ($this->plugin->getConfig()->get("anti-spam")['kick_on_spam']) {
                     $player->kick($this->plugin->getConfig()->get("anti-spam")['kick_message']);
                 }
             }
-            $this->resetCounter($name, "message");
+            $this->resetCounter($playerName, "message");
         }
 
         if ($this->plugin->getConfig()->get("anti-caps")['enabled']) {
@@ -100,7 +100,7 @@ class EventListener implements Listener {
                     $kickMessage = $this->plugin->getConfig()->get("anti-advertise")['kick_message'];
 
                     $player->sendMessage($this->plugin->getMessage($warningMessage));
-                    $this->notifyAdmins("admin_notify_advertise", $player->getName());
+                    $this->notifyAdmins("admin_notify_advertise", $playerName);
 
                     if ($this->plugin->getConfig()->get("anti-advertise")['kick_on_advertise']) {
                         $player->kick($this->plugin->getMessage($kickMessage));
@@ -118,28 +118,28 @@ class EventListener implements Listener {
             $player = $sender;
 
             if ($this->plugin->getConfig()->get("anti-command-spam")['enabled']) {
-                $name = $player->getName();
-                $this->commandCount[$name] = ($this->commandCount[$name] ?? 0) + 1;
-                if ($this->commandCount[$name] > $this->plugin->getConfig()->get("anti-command-spam")['max_commands_per_second']) {
+                $playerName = $player->getName();
+                $this->commandCount[$playerName] = ($this->commandCount[$playerName] ?? 0) + 1;
+                if ($this->commandCount[$playerName] > $this->plugin->getConfig()->get("anti-command-spam")['max_commands_per_second']) {
                     $event->cancel();
                     $player->sendMessage($this->plugin->getMessage("command_spam_warning"));
-                    $this->notifyAdmins("admin_notify_command_spam", $player->getName());
+                    $this->notifyAdmins("admin_notify_command_spam", $playerName);
                     if ($this->plugin->getConfig()->get("anti-command-spam")['kick_on_spam']) {
                         $player->kick($this->plugin->getConfig()->get("anti-command-spam")['kick_message']);
                     }
                 }
-                $this->resetCounter($name, "command");
+                $this->resetCounter($playerName, "command");
             }
         }
     }
 
-    private function resetCounter(string $name, string $type): void {
+    private function resetCounter(string $playerName, string $type): void {
         $scheduler = $this->plugin->getScheduler();
-        $scheduler->scheduleDelayedTask(new ClosureTask(function() use ($name, $type): void {
+        $scheduler->scheduleDelayedTask(new ClosureTask(function() use ($playerName, $type): void {
             if ($type === "message") {
-                $this->plugin->messageCount[$name] = 0;
+                $this->plugin->messageCount[$playerName] = 0;
             } else {
-                $this->plugin->commandCount[$name] = 0;
+                $this->plugin->commandCount[$playerName] = 0;
             }
         }), 20);
     }
