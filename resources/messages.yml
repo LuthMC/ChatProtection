@@ -16,3 +16,6 @@ messages:
   admin_notify_command_spam: "{prefix}[{player}] is spamming commands!"
   anti-caps_warning: "{prefix}Please do not use too many caps."
   admin_notify_advertise: "{prefix}{player} is advertising."
+  staffchat_message: "{prefix}[STAFFCHAT] {player}: {message}"
+  staffchat_toggled: "{prefix}Staff chat has been {status}."
+  repeat_message_warning: "{prefix}Please do not send the same message repeatedly."
