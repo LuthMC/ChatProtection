@@ -153,6 +153,10 @@ class EventListener implements Listener {
         }
     }
 
+    private function normalizeMessage(string $message): string {
+        return preg_replace('/\s+/', '', strtolower($message));
+    }
+
     public function lockChat(): void {
         $this->chatLocked = true;
     }
