@@ -1,6 +1,18 @@
-# 🔒 ChatProtection V0.0.3
+<p align="center">
+ <img width="100px" src="https://i.ibb.co.com/cTbXdJw/20240818-182526.png" align="center" alt="GitHub Readme Stats" />
+ <h2 align="center">ChatProtection</h2>
+ <p align="center">A plugin to protect your chat from spam and other unwanted behavior.</p>
+</p>
+</p>
+  <p align="center">
+    <a href="https://github.com/LuthMC/ChatProtection/graphs/contributors"><img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/LuthMC/ChatProtection"/></a>
+    <a href="https://github.com/LuthMC/ChatProtection/issues"><img alt="Issues" src="https://img.shields.io/github/issues/LuthMC/ChatProtection?color=0088ff"/></a>
+    <a href="https://github.com/LuthMC/ChatProtection"><img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/LuthMC/ChatProtection?color=0088ff"/></a>
+    <a href="https://poggit.pmmp.io/p/ChatProtection"><img src="https://poggit.pmmp.io/shield.state/ChatProtection"></a>
+  </p>
+  
 ### Feature
-    • Anti-Spam                                   
+    • Anti-Spam                                  
     • Anti-Command-Spam                                   
     • Anti-Caps                               
     • Anti-Advertise                              
