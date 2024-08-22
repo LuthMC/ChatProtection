@@ -5,12 +5,15 @@
 </p>
 </p>
   <p align="center">
-    <a href="https://github.com/LuthMC/ChatProtection/graphs/contributors"><img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/LuthMC/ChatProtection"/></a>
     <a href="https://github.com/LuthMC/ChatProtection/issues"><img alt="Issues" src="https://img.shields.io/github/issues/LuthMC/ChatProtection?color=0088ff"/></a>
     <a href="https://github.com/LuthMC/ChatProtection"><img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/LuthMC/ChatProtection?color=0088ff"/></a>
+<a href="https://github.com/LuthMC/ChatProtection/releases/latest"><img src="https://img.shields.io/github/v/release/LuthMC/ChatProtection"></a>
+<img src="https://img.shields.io/github/languages/code-size/LuthMC/ChatProtection"></a>
+<a href="https://github.com/LuthMC/ChatProtection/graphs/contributors"><img src="https://img.shields.io/github/contributors/LuthMC/ChatProtection"></a>
     <a href="https://poggit.pmmp.io/p/ChatProtection"><img src="https://poggit.pmmp.io/shield.state/ChatProtection"></a>
   </p>
-  
+
+---
 ### Feature
     • Anti-Spam                                  
     • Anti-Command-Spam                                   
@@ -25,7 +28,7 @@
     • Clear Chats
     • Staff Chats (BETA)
     • More Feature Soon!
-
+    
 ### Commands
 | Commands | Description |
 |---------|-------------|
@@ -43,8 +46,13 @@
 | ```chatprotection.notify``` | Allows the player to receive notifications about spamming |
 | ```chatprotection.staff``` | Allows access to the staff chat |
 
+### Download
+1️⃣ [**Dev Builds**](https://poggit.pmmp.io/ci/LuthMC/ChatProtection)                                               
+2️⃣ [**Release**](https://poggit.pmmp.io/p/ChatProtection)
+
 ### Credits
 Icon by [flaticon](https://www.flaticon.com/free-icons/chat)
 
 ### Found Bugs
-🔎 If you found any bugs feel free to open [issues](https://github.com/LuthMC/ChatProtection/issues)!
+> [!NOTE]
+> 🔎 If you found any bugs feel free to open [issues](https://github.com/LuthMC/ChatProtection/issues)!
